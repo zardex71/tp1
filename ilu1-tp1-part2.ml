@@ -24,8 +24,7 @@ let multiple_of n d =
 
 let integer_square_root n =
   let r = int_of_float (sqrt (float_of_int n)) in
-  let r = if r * r > n then r - 1 else r in
-  if (r + 1) * (r + 1) <= n then r + 1 else r
+  if r * r > n then r - 1 else r
 
 
 (* ---------------------------------------------------------------------
@@ -50,7 +49,8 @@ let string_of_bool b =
    renvoie true si les 4 composantes sont 2 à 2 distinctes.
 
    Question pour l'encadrant : cette fonction est-elle polymorphe ?
-   Qu'est-ce que cela signifie ?
+   Réponse : oui, elle marche pour tout type 'a, à condition que les
+   4 éléments soient du même type (<> compare deux valeurs de même type).
    --------------------------------------------------------------------- *)
 
 let pairwise_distinct (a, b, c, d) =
@@ -60,17 +60,36 @@ let pairwise_distinct (a, b, c, d) =
 (* ---------------------------------------------------------------------
    Exercice 4 (Intermède : autour de la synthèse de type)
 
-   Deviner le résultat de l'interprète, puis vérifier dans le Toplevel :
+   Résultats obtenus dans le Toplevel :
 
-   # (1, false) ;;                         - : int * bool = (1, false)
+   # (1, false) ;;
+   - : int * bool = (1, false)
+
    # (2., 1 + 4, 1 = 1, "salut") ;;
+   - : float * int * bool * string = (2., 5, true, "salut")
+
    # (('a', 1), ('b', 2), ('c', 3)) ;;
+   - : (char * int) * (char * int) * (char * int) = (('a', 1), ('b', 2), ('c', 3))
+
    # (1, 2, 3) ;;
+   - : int * int * int = (1, 2, 3)
+
    # (1, (2, 3)) ;;
+   - : int * (int * int) = (1, (2, 3))
+
    # ((1, 2), 3) ;;
+   - : (int * int) * int = ((1, 2), 3)
+
    # (1, 2, 3) = (2, 1, 3) ;;
+   - : bool = false
+
    # (1, (2, 3)) = (1, 2, 3) ;;
+   Error: This expression has type 'a * 'b * 'c
+          but an expression was expected of type int * (int * int)
+   (une paire et un triplet sont deux types differents)
+
    # fun x f -> f x ;;
+   - : 'a -> ('a -> 'b) -> 'b = <fun>
    --------------------------------------------------------------------- *)
 
 
